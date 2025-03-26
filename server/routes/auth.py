@@ -21,7 +21,7 @@ def signup_user(user: UserCreate, db: Session=Depends(get_db)):
     db.add(user_db)
     db.commit()
     db.refresh(user_db)
-    return user_db 
+    return user_db
 
 
 @router.post('/login', response_model=UserResponse)
@@ -32,4 +32,4 @@ def login_user(user: UserLogin, db: Session = Depends(get_db)):
     is_match = bcrypt.checkpw(user.password.encode(), bytes(user_db.password))
     if not is_match:
         raise HTTPException(400, 'Incorrect password!')
-    return user_db  
+    return user_db
