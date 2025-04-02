@@ -2,10 +2,11 @@ import 'dart:async';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:fpdart/fpdart.dart';
 
 class AuthRemoteRepository {
   final String baseUrl = "http://192.168.100.11:8000";
-  Future<void> signup({
+  Future<Either<Failure, Map<String, dynamic>>> signup({
     required String email,
     required String password,
     required String name,
@@ -19,10 +20,6 @@ class AuthRemoteRepository {
         'name': name,
       };
 
-      print('Attempting signup...');
-      print('Request URL: $url');
-      print('Request Body: ${jsonEncode(requestBody)}');
-
       final response = await http.post(
         url,
         headers: {
@@ -32,27 +29,14 @@ class AuthRemoteRepository {
         body: jsonEncode(requestBody),
       );
 
-      print('Response Status Code: ${response.statusCode}');
-      print('Response Body: ${response.body}');
-      print('Response Headers: ${response.headers}');
-
-      if (response.statusCode == 201) {
-        print('✅ Signup successful');
-      } else {
-        print('❌ Signup failed with status ${response.statusCode}');
-        print('Error Details: ${response.body}');
+      if (response.statusCode != 201) {
+        return Left(response.body);
       }
-    } on SocketException catch (e) {
-      print('🚨 Socket Exception: Unable to connect to the server');
-      print('Error details: $e');
-    } on TimeoutException catch (e) {
-      print('⏳ Timeout Error: Connection timed out');
-      print('Error details: $e');
-    } on HttpException catch (e) {
-      print('📡 HTTP Exception: ${e.message}');
+      print('✅ Signup successful');
+      final user = jsonDecode(response.body) as Map<String, dynamic>;
+      return Right(user);
     } catch (e) {
-      print('❗ Unexpected error during signup');
-      print('Error details: $e');
+      return Left(e.toString());
     }
   }
 
