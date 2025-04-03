@@ -1,4 +1,8 @@
-class Failure {
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+class AppFailure {
   final String message;
-  Failure({this.message = 'Sorry, An unknown error occurred'});
+  AppFailure([this.message = 'Sorry, An unknown error occurred']);
+
+  @override
+  String toString() => 'AppFailure(message: $message)';
 }
