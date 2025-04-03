@@ -62,19 +62,16 @@ class _SignupPageState extends State<SignupPage> {
                 AuthGradientButton(
                   buttonText: 'Sign Up',
                   OnTap: () async {
-                    if (formKey.currentState!.validate()) {
-                      // Validate before signup
-                      final res = await AuthRemoteRepository().signup(
-                        email: emailController.text,
-                        password: passwordController.text,
-                        name: nameController.text,
-                      );
-                      final val = switch (res) {
-                        Left(value: final l) => l,
-                        Right(value: final r) => r.toString(),
-                      };
-                      print(val);
-                    }
+                    final res = await AuthRemoteRepository().signup(
+                      email: emailController.text,
+                      password: passwordController.text,
+                      name: nameController.text,
+                    );
+                    final val = switch (res) {
+                      Left(value: final l) => l,
+                      Right(value: final r) => r.toString(),
+                    };
+                    print(val);
                   },
                 ),
                 const SizedBox(height: 20),
