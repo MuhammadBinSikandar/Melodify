@@ -1,11 +1,19 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:client/core/constants/server_constant.dart';
 import 'package:client/core/failure/failure.dart';
 import 'package:client/features/auth/model/user_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:fpdart/fpdart.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'auth_remote_repository.g.dart';
+
+@riverpod
+// ignore: deprecated_member_use_from_same_package
+AuthRemoteRepository authRemoteRepository(AuthRemoteRepositoryRef ref) {
+  return AuthRemoteRepository();
+}
 
 class AuthRemoteRepository {
   final String baseUrl = "http://192.168.100.11:8000";
@@ -16,12 +24,6 @@ class AuthRemoteRepository {
   }) async {
     try {
       final Uri url = Uri.parse('${ServerConstant.serverURL}/auth/signup');
-
-      final Map<String, dynamic> requestBody = {
-        'email': email,
-        'password': password,
-        'name': name,
-      };
 
       final response = await http.post(
         url,
