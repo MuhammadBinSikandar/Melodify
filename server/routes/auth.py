@@ -8,6 +8,8 @@ from fastapi import APIRouter
 from database import get_db
 from pydantic_schemas.user_login import UserLogin
 from pydantic_schemas.user_response import UserResponse
+import jwt
+from middleware.auth_middleware import auth_middleware
 
 router = APIRouter()
 
@@ -23,13 +25,28 @@ def signup_user(user: UserCreate, db: Session=Depends(get_db)):
     db.refresh(user_db)
     return user_db
 
-
-@router.post('/login', response_model=UserResponse)
+@router.post('/login')
 def login_user(user: UserLogin, db: Session = Depends(get_db)):
     user_db = db.query(User).filter(User.email == user.email).first()
     if not user_db:
         raise HTTPException(400, 'User with this email does not exist!')
+    
     is_match = bcrypt.checkpw(user.password.encode(), bytes(user_db.password))
     if not is_match:
         raise HTTPException(400, 'Incorrect password!')
-    return user_db
+    
+    token = jwt.encode({'id': user_db.id}, 'loyalty', algorithm='HS256')
+    
+    user_response = UserResponse.model_validate(user_db)
+    return {
+        'token': token,
+        'user': user_response
+    }
+
+@router.get('/', response_model=UserResponse)
+def current_user_data(db: Session = Depends(get_db), user_dict= Depends(auth_middleware)):
+    user = db.query(User).filter(User.id == user_dict['uid']).first()
+    if not user:
+        raise HTTPException(404, 'User not found!')
+    return user
+
