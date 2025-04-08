@@ -39,7 +39,7 @@ class AuthRemoteRepository {
         return Left(AppFailure(resBodyMap['detail']));
       }
       print('✅ Signup successful');
-      return Right(UserModel.fromMap(resBodyMap));
+      return Right(UserModel.fromMap(resBodyMap['user']));
     } catch (e) {
       return Left(AppFailure(e.toString()));
     }
@@ -70,7 +70,11 @@ class AuthRemoteRepository {
         return Left(AppFailure(resBodyMap['detail']));
       }
       print('✅ Login successful');
-      return Right(UserModel.fromMap(resBodyMap));
+      return Right(
+        UserModel.fromMap(
+          resBodyMap['user'],
+        ).copyWith(token: resBodyMap['token']),
+      );
     } catch (e) {
       return Left(AppFailure(e.toString()));
     }
