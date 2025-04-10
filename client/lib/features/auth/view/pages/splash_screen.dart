@@ -16,7 +16,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
 
     // Redirect to signup page after 3 seconds
-    Timer(const Duration(seconds: 3), () {
+    Timer(const Duration(seconds: 2), () {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const SignupPage()),
@@ -33,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Spotify logo from network
-            Image.asset('assets/spotify.png', width: 150, height: 150),
+            Image.asset('assets/spotify.png', width: 300, height: 300),
             const SizedBox(height: 30),
             const CircularProgressIndicator(color: Colors.green),
           ],
