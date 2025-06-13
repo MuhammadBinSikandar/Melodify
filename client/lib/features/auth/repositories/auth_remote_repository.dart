@@ -16,7 +16,7 @@ AuthRemoteRepository authRemoteRepository(AuthRemoteRepositoryRef ref) {
 }
 
 class AuthRemoteRepository {
-  final String baseUrl = "http://192.168.100.11:8000";
+  final String baseUrl = "http://192.168.100.96:8000";
   Future<Either<AppFailure, UserModel>> signup({
     required String email,
     required String password,
