@@ -33,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Spotify logo from network
-            Image.asset('assets/spotify.png', width: 300, height: 300),
+            Image.asset('assets/images/spotify.png', width: 300, height: 300),
             const SizedBox(height: 30),
             const CircularProgressIndicator(color: Colors.green),
           ],
