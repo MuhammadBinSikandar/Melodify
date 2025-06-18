@@ -1,5 +1,7 @@
+// ignore_for_file: unused_local_variable, duplicate_ignore
+
+import 'package:client/core/model/user_model.dart';
 import 'package:client/core/providers/current_user_notifier.dart';
-import 'package:client/features/auth/model/user_model.dart';
 import 'package:client/features/auth/repositories/auth_local_repository.dart';
 import 'package:client/features/auth/repositories/auth_remote_repository.dart';
 import 'package:fpdart/fpdart.dart';
@@ -36,12 +38,12 @@ class AuthViewmodel extends _$AuthViewmodel {
       password: password,
       name: name,
     );
+    // ignore: unused_local_variable
     final val = switch (res) {
       Left(value: final l) =>
         state = AsyncValue.error(l.message, StackTrace.current),
       Right(value: final r) => state = AsyncValue.data(r),
     };
-    print(val);
   }
 
   Future<void> loginUser({
@@ -58,7 +60,6 @@ class AuthViewmodel extends _$AuthViewmodel {
         state = AsyncValue.error(l.message, StackTrace.current),
       Right(value: final r) => _loginSuccess(r),
     };
-    print(val);
   }
 
   AsyncValue<UserModel>? _loginSuccess(UserModel user) {
