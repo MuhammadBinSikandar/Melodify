@@ -1,6 +1,9 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:client/core/theme/app_pallete.dart';
 import 'package:client/features/home/view/pages/library_page.dart';
 import 'package:client/features/home/view/pages/songs_page.dart';
+import 'package:client/features/home/view/widgets/music_slab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/providers/current_user_notifier.dart';
@@ -21,7 +24,12 @@ class _HomepageState extends ConsumerState<Homepage> {
   Widget build(BuildContext context) {
     final user = ref.watch(currentUserNotifierProvider);
     return Scaffold(
-      body: pages[selectedIndex],
+      body: Stack(
+        children: [
+          pages[selectedIndex],
+          const Positioned(bottom: 0, child: MusicSlab()),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: selectedIndex,
         onTap: (value) {
