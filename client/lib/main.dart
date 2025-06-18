@@ -1,7 +1,7 @@
 // ignore_for_file: unused_local_variable
-
 import 'package:client/core/providers/current_user_notifier.dart';
 import 'package:client/core/theme/theme.dart';
+import 'package:client/features/auth/view/pages/signup_page.dart';
 import 'package:client/features/auth/view/pages/splash_screen.dart';
 import 'package:client/features/auth/viewmodel/auth_viewmodel.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +38,7 @@ class MyApp extends ConsumerWidget {
       title: 'Melodify',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkThemeMode,
-      home: SplashScreen(),
+      home: SignupPage(),
     );
   }
 }
