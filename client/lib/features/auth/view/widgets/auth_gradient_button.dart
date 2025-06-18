@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:client/core/theme/app_pallete.dart';
 import 'package:flutter/material.dart';
 
