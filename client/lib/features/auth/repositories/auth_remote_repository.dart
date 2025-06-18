@@ -1,7 +1,9 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 import 'package:client/core/constants/server_constant.dart';
 import 'package:client/core/failure/failure.dart';
-import 'package:client/features/auth/model/user_model.dart';
+import 'package:client/core/model/user_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:fpdart/fpdart.dart';
@@ -16,7 +18,7 @@ AuthRemoteRepository authRemoteRepository(AuthRemoteRepositoryRef ref) {
 }
 
 class AuthRemoteRepository {
-  // final String baseUrl = "http://10.113.73.153:8000";
+  // final String baseUrl = "http://172.20.6.226:8080";
   final String baseUrl = "http://192.168.100.96:8080";
 
   Future<Either<AppFailure, UserModel>> signup({
