@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use_from_same_package
+
 import 'dart:io';
 import 'dart:convert';
 import 'package:client/core/constants/server_constant.dart';
@@ -98,6 +100,34 @@ class HomeRepository {
       }
 
       return Right(resBodyMap['message']);
+    } catch (e) {
+      return Left(AppFailure(e.toString()));
+    }
+  }
+
+  Future<Either<AppFailure, List<SongModel>>> getFavSongs({
+    required String token,
+  }) async {
+    try {
+      final res = await http.get(
+        Uri.parse('${ServerConstant.serverURL}/song/list/favorites'),
+        headers: {'Content-Type': 'application/json', 'x-auth-token': token},
+      );
+      var resBodyMap = jsonDecode(res.body);
+
+      if (res.statusCode != 200) {
+        resBodyMap = resBodyMap as Map<String, dynamic>;
+        return Left(AppFailure(resBodyMap['detail']));
+      }
+      resBodyMap = resBodyMap as List;
+
+      List<SongModel> songs = [];
+
+      for (final map in resBodyMap) {
+        songs.add(SongModel.fromMap(map['song']));
+      }
+
+      return Right(songs);
     } catch (e) {
       return Left(AppFailure(e.toString()));
     }
