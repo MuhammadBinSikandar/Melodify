@@ -1,7 +1,8 @@
+# server/routes/song.py
 import uuid
 import cloudinary
 import cloudinary.uploader
-from fastapi import APIRouter, UploadFile, File, Form, Depends
+from fastapi import APIRouter, HTTPException, UploadFile, File, Form, Depends
 from sqlalchemy.orm import Session
 from database import get_db
 from middleware.auth_middleware import auth_middleware
@@ -10,7 +11,11 @@ from pydantic_schemas.favotite_song import FavoriteSong
 from models.favorite import Favorite
 from sqlalchemy.orm import joinedload
 
+from pydantic_schemas.increment_play_count import IncrementPlayCount
+
 router = APIRouter()
+
+
 
 cloudinary.config( 
     cloud_name = "ddudykruo", 
@@ -78,3 +83,22 @@ def list_fav_songs(db: Session=Depends(get_db),
     ).all()
     
     return fav_songs
+
+@router.post('/increment-play-count')
+def increment_play_count(request: IncrementPlayCount,
+                        db: Session = Depends(get_db), 
+                        auth_details= Depends(auth_middleware)):
+    song = db.query(Song).filter(Song.id == request.song_id).first()
+    if not song:
+        raise HTTPException(status_code=404, detail="Song not found")
+    
+    song.play_count += 1
+    db.commit()
+    db.refresh(song)
+    return {"message": "Play count incremented", "play_count": song.play_count}
+
+@router.get('/top-songs')
+def get_top_songs(db: Session = Depends(get_db), 
+                 auth_details= Depends(auth_middleware)):
+    top_songs = db.query(Song).order_by(Song.play_count.desc()).limit(20).all()
+    return top_songs
