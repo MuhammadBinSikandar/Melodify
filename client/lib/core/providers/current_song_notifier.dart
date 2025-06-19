@@ -1,18 +1,23 @@
+// client/lib/core/providers/current_song_notifier.dart
+import 'package:client/core/providers/current_user_notifier.dart';
 import 'package:client/features/home/models/song_model.dart';
 import 'package:client/features/home/repositories/home_local_repository.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:client/features/home/repositories/home_repository.dart';
 part 'current_song_notifier.g.dart';
 
 @riverpod
 class CurrentSongNotifier extends _$CurrentSongNotifier {
   late HomeLocalRepository _homeLocalRepository;
+  late HomeRepository _homeRepository;
   AudioPlayer? audioPlayer;
   bool isPlaying = false;
   @override
   SongModel? build() {
     _homeLocalRepository = ref.watch(homeLocalRepositoryProvider);
+    _homeRepository = ref.watch(homeRepositoryProvider);
     return null;
   }
 
@@ -39,9 +44,17 @@ class CurrentSongNotifier extends _$CurrentSongNotifier {
       }
     });
     _homeLocalRepository.uploadLocalSong(song);
+    _incrementPlayCount(song.id);
     audioPlayer!.play();
     isPlaying = true;
     state = song;
+  }
+
+  void _incrementPlayCount(String songId) async {
+    final token = ref.read(currentUserNotifierProvider)?.token;
+    if (token != null) {
+      await _homeRepository.incrementPlayCount(token: token, songId: songId);
+    }
   }
 
   void playPause() {
