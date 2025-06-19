@@ -4,6 +4,7 @@ import 'package:client/core/theme/theme.dart';
 import 'package:client/features/auth/view/pages/signup_page.dart';
 import 'package:client/features/auth/view/pages/splash_screen.dart';
 import 'package:client/features/auth/viewmodel/auth_viewmodel.dart';
+import 'package:client/features/home/view/pages/top_songs_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -38,7 +39,7 @@ class MyApp extends ConsumerWidget {
       title: 'Melodify',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkThemeMode,
-      home: SignupPage(),
+      home: SplashScreen(),
     );
   }
 }
