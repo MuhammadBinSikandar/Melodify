@@ -3,6 +3,7 @@
 import 'package:client/core/theme/app_pallete.dart';
 import 'package:client/features/home/view/pages/library_page.dart';
 import 'package:client/features/home/view/pages/songs_page.dart';
+import 'package:client/features/home/view/pages/top_songs_page.dart';
 import 'package:client/features/home/view/widgets/music_slab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,7 +23,7 @@ class _HomepageState extends ConsumerState<Homepage>
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
 
-  final pages = const [SongsPage(), LibraryPage()];
+  final pages = const [SongsPage(), TopSongsPage(), LibraryPage()];
 
   @override
   void initState() {
@@ -171,12 +172,22 @@ class _HomepageState extends ConsumerState<Homepage>
                   'assets/images/home_filled.png',
                   'assets/images/home_unfilled.png',
                   'Home',
+                  isImageAsset: true,
                 ),
                 _buildNavItem(
                   1,
+                  null,
+                  null,
+                  'Top Songs',
+                  isImageAsset: false,
+                  icon: Icons.trending_up,
+                ),
+                _buildNavItem(
+                  2,
                   'assets/images/library.png',
                   'assets/images/library.png',
                   'Library',
+                  isImageAsset: true,
                 ),
               ],
             ),
@@ -188,10 +199,12 @@ class _HomepageState extends ConsumerState<Homepage>
 
   Widget _buildNavItem(
     int index,
-    String activeIcon,
-    String inactiveIcon,
-    String label,
-  ) {
+    String? activeIcon,
+    String? inactiveIcon,
+    String label, {
+    bool isImageAsset = true,
+    IconData? icon,
+  }) {
     final isSelected = selectedIndex == index;
 
     return GestureDetector(
@@ -199,7 +212,7 @@ class _HomepageState extends ConsumerState<Homepage>
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           gradient:
@@ -246,20 +259,32 @@ class _HomepageState extends ConsumerState<Homepage>
                           ]
                           : null,
                 ),
-                child: Image.asset(
-                  isSelected ? activeIcon : inactiveIcon,
-                  height: 22,
-                  width: 22,
-                  color:
-                      isSelected ? Colors.white : Colors.white.withOpacity(0.6),
-                ),
+                child:
+                    isImageAsset
+                        ? Image.asset(
+                          isSelected ? activeIcon! : inactiveIcon!,
+                          height: 22,
+                          width: 22,
+                          color:
+                              isSelected
+                                  ? Colors.white
+                                  : Colors.white.withOpacity(0.6),
+                        )
+                        : Icon(
+                          icon,
+                          size: 22,
+                          color:
+                              isSelected
+                                  ? Colors.white
+                                  : Colors.white.withOpacity(0.6),
+                        ),
               ),
             ),
             const SizedBox(height: 2),
             AnimatedDefaultTextStyle(
               duration: const Duration(milliseconds: 300),
               style: TextStyle(
-                fontSize: isSelected ? 11 : 10,
+                fontSize: isSelected ? 10 : 9,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                 color:
                     isSelected ? Colors.white : Colors.white.withOpacity(0.6),
