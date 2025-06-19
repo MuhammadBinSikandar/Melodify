@@ -1,3 +1,4 @@
+// client/lib/features/home/viewmodel/home_viewmodel.dart
 // ignore_for_file: deprecated_member_use_from_same_package, unused_local_variable
 
 import 'dart:io';
@@ -31,6 +32,20 @@ Future<List<SongModel>> getFavSongs(GetFavSongsRef ref) async {
     currentUserNotifierProvider.select((user) => user!.token),
   );
   final res = await ref.watch(homeRepositoryProvider).getFavSongs(token: token);
+
+  return switch (res) {
+    Left(value: final l) => throw l.message,
+    Right(value: final r) => r,
+  };
+}
+
+// Add this provider at the top of the file with other providers
+@riverpod
+Future<List<SongModel>> getTopSongs(GetTopSongsRef ref) async {
+  final token = ref.watch(
+    currentUserNotifierProvider.select((user) => user!.token),
+  );
+  final res = await ref.watch(homeRepositoryProvider).getTopSongs(token: token);
 
   return switch (res) {
     Left(value: final l) => throw l.message,
@@ -123,5 +138,33 @@ class HomeViewModel extends _$HomeViewModel {
     }
     ref.invalidate(getFavSongsProvider);
     return state = AsyncValue.data(isFavorited);
+  }
+
+  List<SongModel> getArtistBasedRecommendations(List<SongModel> allSongs) {
+    // Get recently played songs and favorite songs
+    final recentlyPlayed = getRecentlyPlayedSongs();
+    final favoriteSongs = ref.read(getFavSongsProvider).valueOrNull ?? [];
+
+    // Extract unique artists from recently played and favorite songs
+    final preferredArtists =
+        {
+          ...recentlyPlayed.map((song) => song.artist),
+          ...favoriteSongs.map((song) => song.artist),
+        }.toList();
+
+    // Filter allSongs to include only those by preferred artists
+    final recommendedSongs =
+        allSongs
+            .where((song) => preferredArtists.contains(song.artist))
+            .toList();
+
+    // If no matching songs found, return empty list (strictly matching artists only)
+    if (recommendedSongs.isEmpty) {
+      return [];
+    }
+
+    // Shuffle recommendations and limit to exactly 4 songs
+    recommendedSongs.shuffle();
+    return recommendedSongs.take(8).toList();
   }
 }
