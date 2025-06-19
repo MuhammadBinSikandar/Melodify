@@ -672,6 +672,7 @@ class _UploadSongPageState extends ConsumerState<UploadSongPage>
                               } else {
                                 showSnackBar(context, 'Missing Fields!');
                               }
+                              formkey.currentState?.reset();
                             },
                             icon: const Icon(
                               Icons.upload_rounded,
