@@ -1,4 +1,5 @@
-from sqlalchemy import VARCHAR, TEXT, Column
+# server/models/song.py
+from sqlalchemy import VARCHAR, TEXT, Column, Integer
 from models.base import Base
 
 class Song(Base):
@@ -10,3 +11,4 @@ class Song(Base):
     artist = Column(TEXT)
     song_name = Column(VARCHAR(100))
     hex_code = Column(VARCHAR(6))
+    play_count = Column(Integer, default=0)
