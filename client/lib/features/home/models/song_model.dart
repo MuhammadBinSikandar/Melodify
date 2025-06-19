@@ -1,3 +1,4 @@
+// client/lib/features/home/models/song_model.dart
 import 'dart:convert';
 // ignore_for_file: non_constant_identifier_names
 
@@ -8,6 +9,7 @@ class SongModel {
   final String thumbnail_url;
   final String song_url;
   final String hex_code;
+  final int play_count;
   SongModel({
     required this.id,
     required this.song_name,
@@ -15,6 +17,7 @@ class SongModel {
     required this.thumbnail_url,
     required this.song_url,
     required this.hex_code,
+    required this.play_count,
   });
 
   SongModel copyWith({
@@ -24,6 +27,7 @@ class SongModel {
     String? thumbnail_url,
     String? song_url,
     String? hex_code,
+    int? play_count,
   }) {
     return SongModel(
       id: id ?? this.id,
@@ -32,6 +36,7 @@ class SongModel {
       thumbnail_url: thumbnail_url ?? this.thumbnail_url,
       song_url: song_url ?? this.song_url,
       hex_code: hex_code ?? this.hex_code,
+      play_count: play_count ?? this.play_count,
     );
   }
 
@@ -43,6 +48,7 @@ class SongModel {
       'thumbnail_url': thumbnail_url,
       'song_url': song_url,
       'hex_code': hex_code,
+      'play_count': play_count,
     };
   }
 
@@ -54,6 +60,7 @@ class SongModel {
       thumbnail_url: map['thumbnail_url'] ?? '',
       song_url: map['song_url'] ?? '',
       hex_code: map['hex_code'] ?? '',
+      play_count: map['play_count'] ?? 0,
     );
   }
 
@@ -64,7 +71,7 @@ class SongModel {
 
   @override
   String toString() {
-    return 'SongModel(id: $id, song_name: $song_name, artist: $artist, thumbnail_url: $thumbnail_url, song_url: $song_url, hex_code: $hex_code)';
+    return 'SongModel(id: $id, song_name: $song_name, artist: $artist, thumbnail_url: $thumbnail_url, song_url: $song_url, hex_code: $hex_code, play_count: $play_count)';
   }
 
   @override
@@ -76,7 +83,8 @@ class SongModel {
         other.artist == artist &&
         other.thumbnail_url == thumbnail_url &&
         other.song_url == song_url &&
-        other.hex_code == hex_code;
+        other.hex_code == hex_code &&
+        other.play_count == play_count;
   }
 
   @override
@@ -86,6 +94,7 @@ class SongModel {
         artist.hashCode ^
         thumbnail_url.hashCode ^
         song_url.hashCode ^
-        hex_code.hashCode;
+        hex_code.hashCode ^
+        play_count.hashCode;
   }
 }
