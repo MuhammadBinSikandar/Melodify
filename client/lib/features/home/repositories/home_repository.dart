@@ -1,3 +1,4 @@
+//client/lib/features/home/repositories/home_repository.dart
 // ignore_for_file: deprecated_member_use_from_same_package
 
 import 'dart:io';
@@ -125,6 +126,59 @@ class HomeRepository {
 
       for (final map in resBodyMap) {
         songs.add(SongModel.fromMap(map['song']));
+      }
+
+      return Right(songs);
+    } catch (e) {
+      return Left(AppFailure(e.toString()));
+    }
+  }
+
+  // Add this method to your HomeRepository class
+  Future<Either<AppFailure, bool>> incrementPlayCount({
+    required String token,
+    required String songId,
+  }) async {
+    try {
+      final res = await http.post(
+        Uri.parse('${ServerConstant.serverURL}/song/increment-play-count'),
+        headers: {'Content-Type': 'application/json', 'x-auth-token': token},
+        body: jsonEncode({"song_id": songId}),
+      );
+      var resBodyMap = jsonDecode(res.body);
+
+      if (res.statusCode != 200) {
+        resBodyMap = resBodyMap as Map<String, dynamic>;
+        return Left(AppFailure(resBodyMap['detail']));
+      }
+
+      return const Right(true);
+    } catch (e) {
+      return Left(AppFailure(e.toString()));
+    }
+  }
+
+  // Add this method to get top songs
+  Future<Either<AppFailure, List<SongModel>>> getTopSongs({
+    required String token,
+  }) async {
+    try {
+      final res = await http.get(
+        Uri.parse('${ServerConstant.serverURL}/song/top-songs'),
+        headers: {'Content-Type': 'application/json', 'x-auth-token': token},
+      );
+      var resBodyMap = jsonDecode(res.body);
+
+      if (res.statusCode != 200) {
+        resBodyMap = resBodyMap as Map<String, dynamic>;
+        return Left(AppFailure(resBodyMap['detail']));
+      }
+      resBodyMap = resBodyMap as List;
+
+      List<SongModel> songs = [];
+
+      for (final map in resBodyMap) {
+        songs.add(SongModel.fromMap(map));
       }
 
       return Right(songs);
