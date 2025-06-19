@@ -1,3 +1,4 @@
+# server/models/user.py
 from sqlalchemy import TEXT, VARCHAR, Column
 from models.base import Base
 from sqlalchemy.orm import relationship
